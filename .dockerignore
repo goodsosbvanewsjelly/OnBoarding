@@ -1,0 +1,10 @@
+/.idea/
+/data/
+/venv/
+
+*.py[co]
+
+.python-version
+
+frontend/node_modules
+frontend/dist

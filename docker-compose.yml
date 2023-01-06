@@ -7,4 +7,5 @@ services:
     ports:
       - "8899:80"
     volumes:
-      - .:/app
+      # - .:/app
+      - ./data:/app/data

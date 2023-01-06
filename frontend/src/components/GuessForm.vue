@@ -33,25 +33,12 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import _ from "lodash";
 
 const emit = defineEmits<{
   (e: "guess", word: string): void;
 }>();
 
 const input_word = ref<string>("");
-
-// 스로틀한 부분
-function clicked_input() {
-  if (input_word.value !== "") {
-    let throttled = _.throttle(function () {
-      emit("guess", input_word.value);
-      input_word.value = "";
-    }, 2000);
-
-    throttled();
-  }
-}
 
 let throttle: boolean = false;
 function keyUpFn() {
@@ -76,3 +63,4 @@ function guess_input() {
   }
 }
 </script>
+
