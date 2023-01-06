@@ -87,9 +87,6 @@ import { findGuess, todayPuzzleNumber } from "../functions/util";
 //gtag
 import { useGtag } from "vue-gtag-next";
 
-// chart
-import ChartBar from "../components/chartComponents/ChartBar.vue";
-
 const puzzle_number = todayPuzzleNumber();
 
 const yesterday_keyword = ref<string>("");
