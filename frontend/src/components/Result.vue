@@ -6,7 +6,7 @@
       <!-- link 부분 -->
       <span id="yesterday-nearest1k"
         ><router-link :to="'/nearest1k/' + puzzle_number"
-          >상위 1000개의 단어</router-link
+          >상위 1,000개의 단어</router-link
         >를 확인해보세요.</span
       >
     </p>
@@ -79,12 +79,12 @@ const preface = ref<string>("");
 function prefaceCaseUpdate() {
   // 이긴 경우
   if (props.is_gave_up === false) {
-    preface.value = `정답 단어를 맞추었습니다. ${props.today_guess_count_until_ended}번째
-        추측만에 정답을 맞췄네요!`;
+    preface.value = `정답 단어를 맞혔습니다. ${props.today_guess_count_until_ended}번째
+        추측만에 정답을 맞혔네요!`;
 
     // 단어가 1개 이상인 경우
   } else {
-    preface.value = `저런… ${props.puzzle_number}번째 꼬맨틀을 포기했어요..ㅠ`;
+    preface.value = `${props.today_guess_count_until_ended}번째 추측에서 포기했습니다!`;
   }
 }
 
@@ -99,4 +99,3 @@ onMounted(() => {
   margin-bottom: -15px;
 }
 </style>
-

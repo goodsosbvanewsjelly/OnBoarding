@@ -11,7 +11,10 @@
           v-model:is_display_similarity="is_display_similarity"
         ></Menu>
       </header>
-      <SimilarityStory :puzzle_number="puzzle_number"></SimilarityStory>
+      <SimilarityStory
+        :puzzle_number="puzzle_number"
+        :similarity_story="similarity_story"
+      ></SimilarityStory>
       <Error :error_text="error_text"></Error>
       <GuessForm @guess="guessHandler"></GuessForm>
       <Result
@@ -30,7 +33,13 @@
         :last_word="last_word"
         :last_word_index="last_word_index"
         :guess_data="guess_data"
+        :puzzle_number="puzzle_number"
+        :similarity_story="similarity_story"
       ></AnswerListTable>
+
+      <!-- chart -->
+      <ChartBar :guess_data="guess_data"></ChartBar>
+
       <input
         type="button"
         value="포기하기"
@@ -50,13 +59,20 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 
-import { getYesterday, giveUp as giveUpApi, submitGuess } from "../api";
+import {
+  getYesterday,
+  giveUp as giveUpApi,
+  submitGuess,
+  getSimilarityStory,
+} from "../api";
+
 import type {
   GuessResultInterface,
   GuessErrorInterface,
   GuessCacheInterface,
   GuessItemInterface,
   StatsInterface,
+  SimilarityStoryInterface,
 } from "../interface";
 
 import Banner from "../components/Banner.vue";
@@ -68,6 +84,11 @@ import Footer from "../components/Footer.vue";
 import Result from "../components/Result.vue";
 import AnswerListTable from "../components/AnswerListTable.vue";
 import { findGuess, todayPuzzleNumber } from "../functions/util";
+//gtag
+import { useGtag } from "vue-gtag-next";
+
+// chart
+import ChartBar from "../components/chartComponents/ChartBar.vue";
 
 const puzzle_number = todayPuzzleNumber();
 
@@ -95,6 +116,10 @@ const is_display_time = ref<boolean>(true);
 const is_display_similarity = ref<boolean>(true);
 
 const stats = ref<StatsInterface | null>(null);
+const similarity_story = ref<SimilarityStoryInterface | null>(null);
+
+// gtag
+const { event } = useGtag();
 
 async function cachedSubmitGuess(
   puzzle_number: number,
@@ -104,6 +129,11 @@ async function cachedSubmitGuess(
     return cache[word];
   }
   const result = await submitGuess(puzzle_number, word);
+  // gtag
+  event("guess", {
+    event_category: "game_event",
+    event_label: word,
+  });
   if (result?.hasOwnProperty("guess")) {
     cache[word] = result as GuessResultInterface;
   }
@@ -217,6 +247,13 @@ async function guessHandler(word: string) {
       rank: String(result.rank),
     } as GuessItemInterface;
 
+    // gtag
+    event("nth_guess", {
+      event_category: "game_event",
+      event_label: guess,
+      value: guess_data.value.length,
+    });
+
     guess_data.value.push(game_item);
 
     last_word.value = game_item;
@@ -243,6 +280,17 @@ async function guessHandler(word: string) {
       // 클리어 기록
       storage.setItem("winState", "1");
 
+      // gtag
+      event("win", {
+        event_category: "game_event",
+        event_label: "win",
+      });
+      event("win", {
+        event_category: "game_event",
+        event_label: "guess_count",
+        value: guess_data.value.length,
+      });
+
       if (stats.value !== null) {
         stats.value.winStreak += 1;
         stats.value.wins += 1;
@@ -260,6 +308,17 @@ async function giveUp() {
     if (confirm("정말로 포기하시겠습니까?")) {
       // 정답 단어 fetch
       const secret = await giveUpApi(puzzle_number);
+
+      // gtag
+      event("giveup", {
+        event_category: "game_event",
+        event_label: "giveup",
+      });
+      event("win", {
+        event_category: "game_event",
+        event_label: "guess_count",
+        value: guess_data.value.length,
+      });
       const guess_item = {
         cnt: guess_data.value.length + 1,
         word: secret,
@@ -369,6 +428,11 @@ async function loadBasicInfo() {
 
 onMounted(async () => {
   await loadBasicInfo();
+
+  // top1, top10, top100 구하는 함수
+  const similarityStory = await getSimilarityStory(puzzle_number);
+  if (similarityStory !== null) {
+    similarity_story.value = similarityStory;
+  }
 });
 </script>
-

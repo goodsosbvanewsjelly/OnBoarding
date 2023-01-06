@@ -41,7 +41,7 @@ const emit = defineEmits<{
 
 const input_word = ref<string>("");
 
-// 스로틀한 부분
+// 스로틀한 부분 (라이브러리 사용)
 function clicked_input() {
   if (input_word.value !== "") {
     let throttled = _.throttle(function () {
@@ -60,10 +60,8 @@ function keyUpFn() {
   // throttle
   if (!throttle) {
     guess_input();
-    // console.log("throttle1", throttle, new Date().getTime());
     throttle = true;
     setTimeout(() => {
-      // console.log("throttle2", throttle, new Date().getTime());
       throttle = false;
     }, 5);
   }

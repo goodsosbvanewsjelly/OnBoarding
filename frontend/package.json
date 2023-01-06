@@ -11,8 +11,13 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "chart.js": "^4.1.1",
+    "chartjs": "^0.3.24",
     "lodash": "^4.17.21",
     "vue": "^3.2.45",
+    "vue-chartjs": "^5.1.0",
+    "vue-gtag": "^2.0.1",
+    "vue-gtag-next": "^1.14.0",
     "vue-router": "^4.1.6"
   },
   "devDependencies": {

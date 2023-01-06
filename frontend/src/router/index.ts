@@ -16,7 +16,7 @@ const routes = [
     component: Nearest,
     props: true,
   },
-  { path: "/:pathMatch(.*)*", component: page404 },
+  { path: "/:pathMatch(.*)*", redirect: "/" },
 ];
 
 const router = createRouter({

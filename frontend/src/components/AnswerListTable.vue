@@ -6,6 +6,8 @@
         v-if="last_word !== null"
         :word="last_word"
         :is_highlighted="true"
+        :puzzle_number="puzzle_number"
+        :similarity_story="similarity_story"
       />
       <tr>
         <td colspan="4">
@@ -17,15 +19,21 @@
         :key="index"
         :word="word"
         :is_highlighted="false"
+        :puzzle_number="puzzle_number"
+        :similarity_story="similarity_story"
       />
     </tbody>
   </table>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 
-import type { GuessItemInterface, SortTargetInterface } from "../interface";
+import type {
+  GuessItemInterface,
+  SortTargetInterface,
+  SimilarityStoryInterface,
+} from "../interface";
 
 import { numberSort, wordSort, similaritySort } from "../functions/util";
 import AnswerListTableRowHeader from "./AnswerListTableRowHeader.vue";
@@ -38,6 +46,8 @@ const props = defineProps<{
   last_word: GuessItemInterface | null;
   last_word_index: number | null;
   guess_data: GuessItemInterface[];
+  puzzle_number: number;
+  similarity_story: SimilarityStoryInterface | null;
 }>();
 
 function updateSort(clicked_target: SortTargetInterface) {
@@ -80,4 +90,3 @@ const guess_data_to_display = computed(() => {
   height: 1px;
 }
 </style>
-

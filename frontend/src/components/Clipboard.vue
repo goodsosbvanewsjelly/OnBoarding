@@ -19,6 +19,8 @@
 <script setup lang="ts">
 import { onMounted, ref, nextTick } from "vue";
 import type { GuessItemInterface } from "../interface";
+// gatg
+import { useGtag } from "vue-gtag-next";
 
 const props = defineProps<{
   puzzle_number: number;
@@ -35,6 +37,8 @@ const preface = ref<string>("");
 
 const stats = storage.getItem("stats");
 const stats_obj = JSON.parse(stats as string);
+
+const { event } = useGtag();
 
 // 추측 횟수 표시 관련
 const test_time = stats_obj["totalGuesses"];
@@ -157,10 +161,14 @@ const handleCopy = async () => {
 
   navigator.clipboard
     .writeText(inputEl.value.value)
-    .then(() => alert("클립보드가 복사되었습니다"))
+    .then(() =>
+      //
+      alert("클립보드가 복사되었습니다")
+    )
     .catch((e) => {
       handleCopyForIE();
     });
+  event("share");
 };
 
 onMounted(async () => {
@@ -173,4 +181,3 @@ onMounted(async () => {
   padding: 9px;
 }
 </style>
-

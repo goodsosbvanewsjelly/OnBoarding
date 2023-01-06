@@ -203,15 +203,14 @@ input[type="button"] {
   width: 100%;
 }
 
-/* 인풋! - chk */
 #guess-wrapper #guess {
   color: #333;
-  background-color: #fafafa;
+  /* git log job */
+  background-color: #ffffff;
   width: 100%;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
-/* chk */
 
 #guess-wrapper #guess-btn {
   color: black;
